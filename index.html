@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>手機版圖片互動</title>
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+<div class="phone-viewport">
+
+    <div class="page-home">
+        <img class="full-page-img" src="img/IMG_8772.jpg" alt="圖一首頁">
+        <div class="btn-hidden-gs" id="action-gs"></div>
+    </div>
+
+    <div class="popup-overlay" id="popup-menu">
+        <div class="popup-content">
+            <div class="btn-hidden-close-menu" id="action-close-menu"></div>
+
+            <img class="full-page-img" src="img/IMG_8773.jpg" alt="圖二選單">
+            <div class="btn-hidden-reward" id="action-reward"></div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="popup-qr">
+        <div class="popup-content">
+            <div class="btn-hidden-close-qr" id="action-close-qr"></div>
+            <img class="full-page-img" src="img/9192.jpg" alt="圖三二維碼">
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const actionGs = document.getElementById('action-gs');
+    const actionReward = document.getElementById('action-reward');
+    const actionCloseMenu = document.getElementById('action-close-menu');
+    const actionCloseQr = document.getElementById('action-close-qr');
+    
+    const popupMenu = document.getElementById('popup-menu');
+    const popupQr = document.getElementById('popup-qr');
+
+    // 1. 點擊圖一 G$ -> 從最底部升起圖二
+    actionGs.addEventListener('click', () => {
+        popupQr.classList.remove('active'); 
+        popupMenu.classList.add('active'); 
+    });
+
+    // 2. 點擊圖二換禮品 -> 從最底部升起圖三 (蓋在圖二上方)
+    actionReward.addEventListener('click', () => {
+        popupQr.classList.add('active'); 
+    });
+
+    // 3. 點擊圖二專屬關閉按鈕 -> 圖二向下滑動關閉 (退回圖一)
+    actionCloseMenu.addEventListener('click', () => {
+        popupMenu.classList.remove('active');
+    });
+
+    // 4. 點擊圖三專屬關閉按鈕 -> 圖三向下滑動關閉 (退回圖二)
+    actionCloseQr.addEventListener('click', () => {
+        popupQr.classList.remove('active');
+    });
+</script>
+
+</body>
+</html>

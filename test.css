@@ -1,0 +1,180 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+body {
+    background-color: #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: sans-serif;
+}
+
+.phone-viewport {
+    width: 100%;
+    max-width: 414px;
+    height: 100vh;
+    background-color: #000;
+    position: relative;
+    overflow: hidden;
+}
+
+/* 圖片基礎設定 */
+.full-page-img {
+    width: 100%;
+    display: block;
+}
+
+/* 圖一：首頁背景（維持滿版） */
+.page-home {
+    width: 100%;
+    height: 100%;
+    position: relative;
+}
+.page-home .full-page-img {
+    height: 100%;
+    object-fit: cover; 
+}
+
+/* 圖一中央的 G$ 隱藏按鈕 */
+.btn-hidden-gs {
+    position: absolute;
+    bottom: 5%;       
+    left: 50%;        
+    transform: translateX(-50%);
+    width: 205px;      
+    height: 185px;     
+    background-color: rgba(255, 0, 0, 0); /* 測試可改為 0.5 變半透明紅 */
+    border-radius: 50%; 
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* ==================== 彈出層通用設定 (從最底部滑出) ==================== */
+.popup-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* 💡 關鍵：強制所有內容從最底端對齊 */
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+/* 確保圖三疊在圖二上方 */
+#popup-menu { 
+    z-index: 20;
+    background-color: rgba(0, 0, 0, 0.5); /* 圖二保留深色遮罩 */
+ }
+#popup-qr {
+    z-index: 30; 
+    background-color: rgba(0, 0, 0, 0);   /* 💡 關鍵：圖三改為完全透明，不再加深背景 */ 
+} 
+
+.popup-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* 彈出內容：高度隨圖片自動撐開，並靠底 */
+.popup-content {
+    width: 100%;
+    height: auto; /* 💡 改為 auto，圖片有多高，選單就升起多高，不會懸空置中 */
+    position: relative;
+    background: transparent; 
+    overflow: hidden;
+    transform: translateY(100%);
+    transition: transform 0.4s cubic-bezier(0.1, 0.76, 0.55, 0.94);
+}
+.popup-overlay.active .popup-content {
+    transform: translateY(0);
+}
+
+/* 確保彈出層內的圖片寬度 100% 自適應，高度隨比例，不強制拉伸 */
+.popup-content .full-page-img {
+    width: 100%;
+    height: auto;
+    object-fit: normal;
+}
+
+/* ==================== 圖二：功能選單按鈕微調 ==================== */
+/* 圖二的「換禮品」隱藏按鈕 (百分比定位會根據圖二自身高度計算) */
+.btn-hidden-reward {
+    position: absolute;
+    top: 18%;         
+    left: 50%;        
+    transform: translateX(-50%);
+    width: 110px;      
+    height: 110px;     
+    background-color: rgba(159, 159, 202, 0.0); /* 測試可改為 0.5 變半透明藍 */
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 25;
+}
+
+/* 🆕 圖二專屬隱藏關閉按鈕 */
+.btn-hidden-close-menu {
+    position: absolute;
+    top: 4%;          /* 💡 依據圖二圖片中的 X 位置自行調整上下 */
+    right: 6%;        /* 💡 依據圖二圖片中的 X 位置自行調整左右 */
+    width: 50px;      
+    height: 50px;     
+    background-color: rgba(255, 0, 0, 0.0); /* 🔴 預設半透明紅，對準後請改為最後的 0.5 改為 0 */
+    border-radius: 50%; 
+    cursor: pointer;
+    z-index: 26;      
+}
+
+
+/* ==================== 圖三：換禮品二維碼關閉按鈕 ==================== */
+/* 圖三專屬隱藏關閉按鈕 */
+.btn-hidden-close-qr {
+    position: absolute;
+    top: 4%;          /* 💡 依據圖三圖片中的 X 位置自行調整 */
+    right: 6%;        /* 💡 依據圖三圖片中的 X 位置自行調整 */
+    width: 50px;      
+    height: 50px;     
+    background-color: rgba(255, 0, 0, 0.0); /* 測試可改為 0.5 變半透明紅 */
+    border-radius: 50%; 
+    cursor: pointer;
+    z-index: 40;      
+}
+
+/* 🛠️ 新增：關閉按鈕的實體圖示外觀 */
+.btn-hidden-close-menu::before,
+.btn-hidden-close-qr::before {
+content: "✕";             /* 顯示叉叉符號 */
+display: flex;
+align-items: center;
+justify-content: center;
+width: 32px;              /* 圖示圓圈大小，可自行微調 */
+height: 32px;
+background-color: #ffffff; /* 白底 */
+border: 2px solid #2d513b; /* 綠色外框 */
+border-radius: 50%;       /* 變成完美圓形 */
+color: #2d513b;           /* 綠色叉叉 */
+font-size: 16px;
+font-weight: bold;
+box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+
+/* 讓圖示在點擊熱區（50px）裡完美居中 */
+position: absolute;
+top: 50%;
+left: 50%;
+transform: translate(-50%, -50%);
+}
+
+/* 可選：點擊時的微縮放動態回饋 */
+.btn-hidden-close-menu:active::before,
+.btn-hidden-close-qr:active::before {
+transform: translate(-50%, -50%) scale(0.9);
+}
